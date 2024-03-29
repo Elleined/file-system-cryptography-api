@@ -28,7 +28,7 @@ public class DecryptorController {
 
     @PostMapping("/string")
     public String decrypt(@RequestParam("encodedKey") String encodedKey,
-                          byte[] encodedIv,
+                          @RequestParam("encodedIv") String encodedIv,
                           @RequestParam("encryptedData") String encryptedData) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
@@ -38,7 +38,7 @@ public class DecryptorController {
 
     @PostMapping("/file")
     public void decrypt(@RequestParam("encodedKey") String encodedKey,
-                        byte[] encodedIv,
+                        @RequestParam("encodedIv") String encodedIv,
                         @RequestParam("encryptedFileDestination") String encryptedFileDestination,
                         @RequestParam("outputDestination") String outputDestination) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 

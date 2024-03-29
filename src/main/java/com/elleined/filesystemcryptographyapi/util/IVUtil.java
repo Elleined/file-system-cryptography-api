@@ -2,25 +2,27 @@ package com.elleined.filesystemcryptographyapi.util;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 public interface IVUtil {
 
-    static byte[] generateIvBytes(int n) {
+    static String generateIvBytes(int n) {
         SecureRandom secureRandom = new SecureRandom();
         byte[] iv = new byte[n];
         secureRandom.nextBytes(iv);
-        return iv;
+        return Base64.getEncoder().withoutPadding().encodeToString(iv);
     }
 
-    static byte[] generateIvBytes() {
+    static String generateIvBytes() {
         return generateIvBytes(16);
     }
 
-    static IvParameterSpec recoverIv(byte[] encodedIv) {
-        return new IvParameterSpec(encodedIv);
+    static IvParameterSpec recoverIv(String encodedIv) {
+        byte[] encodedIvBytes = Base64.getDecoder().decode(encodedIv);
+        return new IvParameterSpec(encodedIvBytes);
     }
 
-    static IvParameterSpec generateIv() {
-        return new IvParameterSpec(generateIvBytes());
+    static IvParameterSpec recoverIv() {
+        return recoverIv(generateIvBytes());
     }
 }

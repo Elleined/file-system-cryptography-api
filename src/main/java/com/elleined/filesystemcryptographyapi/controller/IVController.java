@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.spec.IvParameterSpec;
-import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,8 +15,8 @@ public class IVController {
 
     @GetMapping("/generate")
     public IvParameterSpec generateIv() {
-        byte[] encodedIv = IVUtil.generateIvBytes();
-        System.out.println("Make sure to save this encoded iv bytes this will be your key for encrypting and decrypting file system!!!: " + Arrays.toString(encodedIv));
+        String encodedIv = IVUtil.generateIvBytes();
+        System.out.println("Make sure to save this encoded iv bytes this will be your key for encrypting and decrypting file system!!!: " + encodedIv);
         return IVUtil.recoverIv(encodedIv);
     }
 }

@@ -33,7 +33,7 @@ class DecryptorServiceImplTest {
         String data = "Hello World!";
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
-        IvParameterSpec iv = IVUtil.generateIv();
+        IvParameterSpec iv = IVUtil.recoverIv();
 
         // Set up method
 
@@ -61,7 +61,7 @@ class DecryptorServiceImplTest {
         // Mock data
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
-        IvParameterSpec iv = IVUtil.generateIv();
+        IvParameterSpec iv = IVUtil.recoverIv();
 
         // Set up method
 
