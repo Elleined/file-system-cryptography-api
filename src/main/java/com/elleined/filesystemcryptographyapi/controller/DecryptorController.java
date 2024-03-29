@@ -1,7 +1,7 @@
 package com.elleined.filesystemcryptographyapi.controller;
 
 import com.elleined.filesystemcryptographyapi.decryptor.DecryptorService;
-import com.elleined.filesystemcryptographyapi.util.AESUtil;
+import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import com.elleined.filesystemcryptographyapi.util.IVUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +31,8 @@ public class DecryptorController {
                           byte[] encodedIv,
                           @RequestParam("encryptedData") String encryptedData) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
-        SecretKey secretKey = AESUtil.recoverSecretKey(encodedKey);
-        IvParameterSpec iv = IVUtil.generateIv(encodedIv);
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
+        IvParameterSpec iv = IVUtil.recoverIv(encodedIv);
         return decryptorService.decrypt(secretKey, iv, encryptedData);
     }
 
@@ -42,8 +42,8 @@ public class DecryptorController {
                         @RequestParam("encryptedFileDestination") String encryptedFileDestination,
                         @RequestParam("outputDestination") String outputDestination) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 
-        SecretKey secretKey = AESUtil.recoverSecretKey(encodedKey);
-        IvParameterSpec iv = IVUtil.generateIv(encodedIv);
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
+        IvParameterSpec iv = IVUtil.recoverIv(encodedIv);
         File encrypted = new File(encryptedFileDestination);
         File output = new File(outputDestination);
         decryptorService.decrypt(secretKey, iv, encrypted, output);

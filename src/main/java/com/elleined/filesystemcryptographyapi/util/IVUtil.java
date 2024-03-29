@@ -16,7 +16,7 @@ public interface IVUtil {
         return generateIvBytes(16);
     }
 
-    static IvParameterSpec generateIv(byte[] encodedIv) {
+    static IvParameterSpec recoverIv(byte[] encodedIv) {
         return new IvParameterSpec(encodedIv);
     }
 

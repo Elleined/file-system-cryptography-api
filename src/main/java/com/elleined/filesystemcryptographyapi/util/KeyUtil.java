@@ -5,7 +5,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 
-public interface AESUtil {
+public interface KeyUtil {
     static SecretKey generateKey(int n, String algorithm) throws NoSuchAlgorithmException {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
         keyGenerator.init(n);
@@ -16,10 +16,10 @@ public interface AESUtil {
         return generateKey(128, "AES");
     }
 
-    static SecretKey recoverSecretKey(byte[] encodedKey) {
+    static SecretKey recoverKey(byte[] encodedKey) {
         return new SecretKeySpec(encodedKey, "AES");
     }
-    static SecretKey recoverSecretKey(byte[] encodedKey, String algorithm) {
+    static SecretKey recoverKey(byte[] encodedKey, String algorithm) {
         return new SecretKeySpec(encodedKey, algorithm);
     }
 }

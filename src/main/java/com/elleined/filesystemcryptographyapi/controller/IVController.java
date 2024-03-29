@@ -18,6 +18,6 @@ public class IVController {
     public IvParameterSpec generateIv() {
         byte[] encodedIv = IVUtil.generateIvBytes();
         System.out.println("Make sure to save this encoded iv bytes this will be your key for encrypting and decrypting file system!!!: " + Arrays.toString(encodedIv));
-        return IVUtil.generateIv(encodedIv);
+        return IVUtil.recoverIv(encodedIv);
     }
 }
