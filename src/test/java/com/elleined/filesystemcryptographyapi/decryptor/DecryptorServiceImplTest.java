@@ -3,6 +3,7 @@ package com.elleined.filesystemcryptographyapi.decryptor;
 import com.elleined.filesystemcryptographyapi.encryptor.EncryptorService;
 import com.elleined.filesystemcryptographyapi.encryptor.EncryptorServiceImpl;
 import com.elleined.filesystemcryptographyapi.util.AESUtil;
+import com.elleined.filesystemcryptographyapi.util.IVUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -30,8 +31,8 @@ class DecryptorServiceImplTest {
 
         // Mock data
         String data = "Hello World!";
-        SecretKey secretKey = AESUtil.generateKey(128);
-        IvParameterSpec iv = AESUtil.generateIv();
+        SecretKey secretKey = AESUtil.generateKey();
+        IvParameterSpec iv = IVUtil.generateIv();
 
         // Set up method
 
@@ -57,8 +58,8 @@ class DecryptorServiceImplTest {
         DecryptorService decryptorService = new DecryptorServiceImpl();
 
         // Mock data
-        SecretKey secretKey = AESUtil.generateKey(128);
-        IvParameterSpec iv = AESUtil.generateIv();
+        SecretKey secretKey = AESUtil.generateKey();
+        IvParameterSpec iv = IVUtil.generateIv();
 
         // Set up method
 
