@@ -1,8 +1,8 @@
 package com.elleined.filesystemcryptographyapi.controller;
 
 import com.elleined.filesystemcryptographyapi.encryptor.EncryptorService;
-import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import com.elleined.filesystemcryptographyapi.util.IVUtil;
+import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +27,7 @@ public class EncryptorController {
     private final EncryptorService encryptorService;
 
     @PostMapping("/string")
-    public String encrypt(byte[] encodedKey,
+    public String encrypt(@RequestParam("encodedKey") String encodedKey,
                           byte[] encodedIv,
                           @RequestParam("data") String data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
@@ -37,7 +37,7 @@ public class EncryptorController {
     }
 
     @PostMapping("/file")
-    public void encrypt(byte[] encodedKey,
+    public void encrypt(@RequestParam("encodedKey") String encodedKey,
                         byte[] encodedIv,
                         @RequestParam("normalFileDestination") String normalFileDestination,
                         @RequestParam("outputDestination") String outputDestination) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {

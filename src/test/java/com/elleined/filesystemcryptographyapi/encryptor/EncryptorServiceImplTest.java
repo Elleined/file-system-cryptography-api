@@ -1,9 +1,7 @@
 package com.elleined.filesystemcryptographyapi.encryptor;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import com.elleined.filesystemcryptographyapi.util.IVUtil;
+import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,6 +17,9 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @ExtendWith(MockitoExtension.class)
 class EncryptorServiceImplTest {
 
@@ -28,7 +29,8 @@ class EncryptorServiceImplTest {
         EncryptorService encryptorService = new EncryptorServiceImpl();
 
         // Mock data
-        SecretKey secretKey = KeyUtil.generateKey();
+        String encodedKey = KeyUtil.generateKey();
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.generateIv();
 
         // Set up method
@@ -50,7 +52,8 @@ class EncryptorServiceImplTest {
         EncryptorService encryptorService = new EncryptorServiceImpl();
 
         // Mock data
-        SecretKey secretKey = KeyUtil.generateKey();
+        String encodedKey = KeyUtil.generateKey();
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.generateIv();
 
         // Set up method

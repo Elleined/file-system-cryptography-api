@@ -2,8 +2,8 @@ package com.elleined.filesystemcryptographyapi.decryptor;
 
 import com.elleined.filesystemcryptographyapi.encryptor.EncryptorService;
 import com.elleined.filesystemcryptographyapi.encryptor.EncryptorServiceImpl;
-import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import com.elleined.filesystemcryptographyapi.util.IVUtil;
+import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,7 +31,8 @@ class DecryptorServiceImplTest {
 
         // Mock data
         String data = "Hello World!";
-        SecretKey secretKey = KeyUtil.generateKey();
+        String encodedKey = KeyUtil.generateKey();
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.generateIv();
 
         // Set up method
@@ -58,7 +59,8 @@ class DecryptorServiceImplTest {
         DecryptorService decryptorService = new DecryptorServiceImpl();
 
         // Mock data
-        SecretKey secretKey = KeyUtil.generateKey();
+        String encodedKey = KeyUtil.generateKey();
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.generateIv();
 
         // Set up method
