@@ -62,11 +62,11 @@ class EncryptorServiceImplTest {
         // Stubbing methods
 
         // Calling the method
-        File input = new File("./src/test/resources/input.txt");
-        File output = new File("./src/test/resources/output.txt");
+        File normalFile = new File("./src/test/resources/encryptor/normal.txt");
+        File output = new File("./src/test/resources/encryptor/encrypted.txt");
 
         // Calling the method
-        assertDoesNotThrow(() -> encryptorService.encrypt(secretKey, iv, input, output));
+        assertDoesNotThrow(() -> encryptorService.encrypt(secretKey, iv, normalFile, output));
 
         // Behavior Verifications
 

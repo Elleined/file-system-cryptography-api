@@ -12,12 +12,12 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import java.io.File;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class DecryptorServiceImplTest {
@@ -51,16 +51,27 @@ class DecryptorServiceImplTest {
     }
 
     @Test
-    void testDecrypt() {
+    void testDecrypt() throws NoSuchAlgorithmException {
         // Expected Value
+        EncryptorService encryptorService = new EncryptorServiceImpl();
+        DecryptorService decryptorService = new DecryptorServiceImpl();
 
         // Mock data
+        SecretKey secretKey = AESUtil.generateKey(128);
+        IvParameterSpec iv = AESUtil.generateIv();
 
         // Set up method
 
         // Stubbing methods
 
         // Calling the method
+        File normalFile = new File("./src/test/resources/decryptor/normal-file.txt");
+        File encrypted = new File("./src/test/resources/decryptor/encrypted-file.txt");
+        File output = new File("./src/test/resources/decryptor/output.txt");
+
+        // Calling the method
+        assertDoesNotThrow(() -> encryptorService.encrypt(secretKey, iv, normalFile, encrypted));
+        assertDoesNotThrow(() -> decryptorService.decrypt(secretKey, iv, encrypted, output));
 
         // Behavior Verifications
 

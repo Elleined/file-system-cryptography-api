@@ -19,15 +19,14 @@ public class EncryptorServiceImpl implements EncryptorService {
     public String encrypt(SecretKey secretKey, IvParameterSpec iv, String data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
-        byte[] cipheredText = cipher.doFinal(data.getBytes());
-        String based64CipheredText = Base64.getEncoder().encodeToString(cipheredText);
-        log.debug("Successfully encrypted supplied data: {} to {}", data, based64CipheredText);
-        return based64CipheredText;
+        String encryptedData = Base64.getEncoder().encodeToString(cipher.doFinal(data.getBytes()));
+        log.debug("Successfully encrypted supplied data: {} to {}", data, encryptedData);
+        return encryptedData;
     }
 
     @Override
-    public void encrypt(SecretKey secretKey, IvParameterSpec iv, File input, File output) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(input));
+    public void encrypt(SecretKey secretKey, IvParameterSpec iv, File normalFile, File output) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(normalFile));
         BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(output));
 
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -46,6 +45,6 @@ public class EncryptorServiceImpl implements EncryptorService {
         inputStream.close();
         outputStream.close();
 
-        log.debug("Successfully encrypted input file named {} into output file named {}", input.getName(), output.getName());
+        log.debug("Successfully encrypted normalFile file named {} into output file named {}", normalFile.getName(), output.getName());
     }
 }
