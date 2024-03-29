@@ -7,6 +7,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -14,5 +15,7 @@ import java.security.NoSuchAlgorithmException;
 public interface DecryptorService {
 
     String decrypt(SecretKey secretKey, IvParameterSpec iv, String encryptedData) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
-    void decrypt(SecretKey secretKey, IvParameterSpec iv, File encryptedFile, File output) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
+    void decrypt(SecretKey secretKey, IvParameterSpec iv, File encryptedFile, File output);
+
+    void decrypt(SecretKey secretKey, IvParameterSpec iv, Path directory, boolean isRecursive) throws IOException;
 }

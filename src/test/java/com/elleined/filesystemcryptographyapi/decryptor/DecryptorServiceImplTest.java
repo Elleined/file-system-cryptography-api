@@ -14,6 +14,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -24,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DecryptorServiceImplTest {
 
     @Test
-    void decrypt() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+    void stringDecrypt() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         // Expected Value
         EncryptorService encryptorService = new EncryptorServiceImpl();
         DecryptorService decryptorService = new DecryptorServiceImpl();
@@ -53,7 +56,7 @@ class DecryptorServiceImplTest {
     }
 
     @Test
-    void testDecrypt() throws NoSuchAlgorithmException {
+    void fileDecrypt() throws NoSuchAlgorithmException {
         // Expected Value
         EncryptorService encryptorService = new EncryptorServiceImpl();
         DecryptorService decryptorService = new DecryptorServiceImpl();
@@ -75,6 +78,32 @@ class DecryptorServiceImplTest {
         // Calling the method
         assertDoesNotThrow(() -> encryptorService.encrypt(secretKey, iv, normalFile, encrypted));
         assertDoesNotThrow(() -> decryptorService.decrypt(secretKey, iv, encrypted, output));
+
+        // Behavior Verifications
+
+        // Assertions
+    }
+
+    @Test
+    void decrypt() throws NoSuchAlgorithmException, IOException {
+        // Expected Value
+        EncryptorService encryptorService = new EncryptorServiceImpl();
+        DecryptorService decryptorService = new DecryptorServiceImpl();
+
+        // Mock data
+        String encodedKey = KeyUtil.generateKey();
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
+        IvParameterSpec iv = IVUtil.recoverIv();
+        boolean isRecursive = true;
+
+        // Set up method
+        Path directory = Paths.get("./src/test/resources/parentFolder");
+
+        // Stubbing methods
+
+        // Calling the method
+        encryptorService.encrypt(secretKey, iv, directory, isRecursive);
+        decryptorService.decrypt(secretKey, iv, directory, isRecursive);
 
         // Behavior Verifications
 
