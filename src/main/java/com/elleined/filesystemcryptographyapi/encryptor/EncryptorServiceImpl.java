@@ -19,7 +19,9 @@ public class EncryptorServiceImpl implements EncryptorService {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         byte[] cipheredText = cipher.doFinal(data.getBytes());
-        return Base64.getEncoder().encodeToString(cipheredText);
+        String based64CipheredText = Base64.getEncoder().encodeToString(cipheredText);
+        log.debug("Successfully encrypted supplied data: {} to {}", data, based64CipheredText);
+        return based64CipheredText;
     }
 
     @Override
