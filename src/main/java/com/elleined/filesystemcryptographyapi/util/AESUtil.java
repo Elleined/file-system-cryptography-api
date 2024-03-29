@@ -19,4 +19,7 @@ public interface AESUtil {
     static SecretKey recoverSecretKey(byte[] encodedKey) {
         return new SecretKeySpec(encodedKey, "AES");
     }
+    static SecretKey recoverSecretKey(byte[] encodedKey, String algorithm) {
+        return new SecretKeySpec(encodedKey, algorithm);
+    }
 }
