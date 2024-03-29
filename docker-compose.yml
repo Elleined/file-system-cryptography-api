@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  fsca_app:
+    build: .
+    image: elleined/fsca
+    container_name: fsca_app
+    restart: always
+    ports:
+      - "8090:8090"
+    networks:
+      - fsca_network
+networks:
+  fsca_network:
+    name: fsca_network
+    external: false
+    ipam:
+      driver: default
