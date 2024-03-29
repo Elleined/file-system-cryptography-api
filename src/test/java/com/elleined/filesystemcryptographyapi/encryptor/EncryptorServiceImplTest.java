@@ -13,6 +13,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -66,6 +68,30 @@ class EncryptorServiceImplTest {
 
         // Calling the method
         assertDoesNotThrow(() -> encryptorService.encrypt(secretKey, iv, normalFile, output));
+
+        // Behavior Verifications
+
+        // Assertions
+    }
+
+    @Test
+    void encrypt() throws NoSuchAlgorithmException, IOException {
+        // Expected Value
+        EncryptorService encryptorService = new EncryptorServiceImpl();
+
+        // Mock data
+        String encodedKey = KeyUtil.generateKey();
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
+        IvParameterSpec iv = IVUtil.recoverIv();
+        boolean isRecursive = true;
+
+        // Set up method
+        Path directory = Paths.get("./src/test/resources/parentFolder");
+
+        // Stubbing methods
+
+        // Calling the method
+        encryptorService.encrypt(secretKey, iv, directory, isRecursive);
 
         // Behavior Verifications
 
