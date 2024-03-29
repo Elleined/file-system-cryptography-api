@@ -1,8 +1,25 @@
 # file-system-cryptography-api
 API for encryption and decryption of file system
 
+## input or output file in Linux (Ubuntu)
+```
+inputDestination: //home//path//to//<file_name>.<file_extension>
+outputDestinaion: //home//path//to//<file_name>.<file_extension>
+
+Example:
+inputDestination: //home//juan/Documents//your_file.txt
+outputDestinaion: //home//juan/Documents//your_file.txt
+```
+
+## input or output file in Windows
+```
+inputDestination: C:\\path\\to\\<file_name>.<file_extension>
+outputDestination: C:\\path\\to\\<file_name>.<file_extension>
+
+Example:
+inputDestination: C:\\your_file.txt
+outputDestination: C:\\your_file.txt
+```
 
 # References
-[1](https://www.geeksforgeeks.org/encrypt-and-decrypt-string-file-using-java/)  
-[2](https://www.baeldung.com/java-aes-encryption-decryption)  
-[3](https://gist.github.com/Anass-ABEA/62281d6efd24c03f87fe614b9297c917)
+[Baeldung File and String Encryption and Decryption](https://www.baeldung.com/java-aes-encryption-decryption)
