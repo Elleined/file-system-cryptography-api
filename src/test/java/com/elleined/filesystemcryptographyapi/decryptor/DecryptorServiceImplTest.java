@@ -101,7 +101,6 @@ class DecryptorServiceImplTest {
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
         boolean isRecursive = true;
 
         // Set up method
@@ -110,7 +109,10 @@ class DecryptorServiceImplTest {
         // Stubbing methods
 
         // Calling the method
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         encryptorService.encrypt(cipher, secretKey, iv, directory, isRecursive);
+
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
         decryptorService.decrypt(cipher, secretKey, iv, directory, isRecursive);
 
         // Behavior Verifications
