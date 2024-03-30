@@ -14,6 +14,7 @@ import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -53,5 +54,19 @@ public class EncryptorController {
         File output = new File(outputDestination);
 
         encryptorService.encrypt(cipher, secretKey, iv, normalFile, output);
+    }
+
+    @PostMapping("/directory")
+    public void encrypt(@RequestParam("encodedKey") String encodedKey,
+                        @RequestParam("encodedIv") String encodedIv,
+                        @RequestParam("directory") String directory,
+                        @RequestParam("isRecursive") boolean isRecursive) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IOException {
+
+        Cipher cipher = Cipher.getInstance(algorithm);
+        SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
+        IvParameterSpec iv = IVUtil.recoverIv(encodedIv);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
+
+        encryptorService.encrypt(cipher, secretKey, iv, Paths.get(directory), isRecursive);
     }
 }
