@@ -5,6 +5,7 @@ import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -22,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(MockitoExtension.class)
 class EncryptorServiceImplTest {
 
+    private final static String algorithm = "AES/CBC/PKCS5Padding";
+
     @Test
     void stringEncrypt() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         // Expected Value
@@ -32,7 +35,7 @@ class EncryptorServiceImplTest {
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         String encodeIv = IVUtil.generateIvBytes();
         IvParameterSpec iv = IVUtil.recoverIv(encodeIv);
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
 
         // Set up method
@@ -57,7 +60,7 @@ class EncryptorServiceImplTest {
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
 
         // Set up method
@@ -85,12 +88,12 @@ class EncryptorServiceImplTest {
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         boolean isRecursive = true;
 
         // Set up method
-        Path directory = Paths.get("./src/test/resources/parentFolder");
+        Path directory = Paths.get("./src/test/resources/encryptor/parentFolder");
 
         // Stubbing methods
 

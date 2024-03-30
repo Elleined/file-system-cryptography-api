@@ -7,6 +7,9 @@ import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.TestPropertySource;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -23,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class DecryptorServiceImplTest {
 
+    private final static String algorithm = "AES/CBC/PKCS5Padding";
+
     @Test
     void stringDecrypt() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         // Expected Value
@@ -35,7 +40,7 @@ class DecryptorServiceImplTest {
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         String encodeIv = IVUtil.generateIvBytes();
         IvParameterSpec iv = IVUtil.recoverIv(encodeIv);
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance(algorithm);
 
         // Set up method
 
@@ -68,7 +73,7 @@ class DecryptorServiceImplTest {
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         String encodeIv = IVUtil.generateIvBytes();
         IvParameterSpec iv = IVUtil.recoverIv(encodeIv);
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance(algorithm);
 
         // Set up method
 
@@ -100,11 +105,11 @@ class DecryptorServiceImplTest {
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance(algorithm);
         boolean isRecursive = true;
 
         // Set up method
-        Path directory = Paths.get("./src/test/resources/parentFolder");
+        Path directory = Paths.get("./src/test/resources/decryptor/parentFolder");
 
         // Stubbing methods
 
