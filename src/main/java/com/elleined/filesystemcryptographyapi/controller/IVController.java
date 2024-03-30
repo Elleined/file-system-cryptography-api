@@ -14,9 +14,9 @@ import javax.crypto.spec.IvParameterSpec;
 public class IVController {
 
     @GetMapping("/generate")
-    public IvParameterSpec generateIv() {
+    public String generateIv() {
         String encodedIv = IVUtil.generateIvBytes();
         System.out.println("Make sure to save this encoded iv bytes this will be your key for encrypting and decrypting file system!!!: " + encodedIv);
-        return IVUtil.recoverIv(encodedIv);
+        return encodedIv;
     }
 }

@@ -43,7 +43,7 @@ public class DecryptorController {
     public void decrypt(@RequestParam("encodedKey") String encodedKey,
                         @RequestParam("encodedIv") String encodedIv,
                         @RequestParam("encryptedFileDestination") String encryptedFileDestination,
-                        @RequestParam("outputDestination") String outputDestination) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+                        @RequestParam("outputDestination") String outputDestination) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 
         Cipher cipher = Cipher.getInstance(algorithm);
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
