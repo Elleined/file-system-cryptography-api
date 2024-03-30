@@ -8,10 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.io.IOException;
@@ -37,14 +34,16 @@ class DecryptorServiceImplTest {
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
 
         // Set up method
 
         // Stubbing methods
 
         // Calling the method
-        String encryptedText = encryptorService.encrypt(secretKey, iv, data);
-        String originalValue = decryptorService.decrypt(secretKey, iv, encryptedText);
+        String encryptedText = encryptorService.encrypt(cipher, secretKey, iv, data);
+        String originalValue = decryptorService.decrypt(cipher, secretKey, iv, encryptedText);
 
         // Behavior Verifications
 
@@ -56,7 +55,7 @@ class DecryptorServiceImplTest {
     }
 
     @Test
-    void fileDecrypt() throws NoSuchAlgorithmException {
+    void fileDecrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Expected Value
         EncryptorService encryptorService = new EncryptorServiceImpl();
         DecryptorService decryptorService = new DecryptorServiceImpl();
@@ -64,7 +63,10 @@ class DecryptorServiceImplTest {
         // Mock data
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
-        IvParameterSpec iv = IVUtil.recoverIv();
+        String encodeIv = IVUtil.generateIvBytes();
+        IvParameterSpec iv = IVUtil.recoverIv(encodeIv);
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
 
         // Set up method
 
@@ -76,16 +78,15 @@ class DecryptorServiceImplTest {
         File output = new File("./src/test/resources/decryptor/output.txt");
 
         // Calling the method
-        assertDoesNotThrow(() -> encryptorService.encrypt(secretKey, iv, normalFile, encrypted));
-        assertDoesNotThrow(() -> decryptorService.decrypt(secretKey, iv, encrypted, output));
-
+        assertDoesNotThrow(() -> encryptorService.encrypt(cipher, secretKey, iv, normalFile, encrypted));
+        assertDoesNotThrow(() -> decryptorService.decrypt(cipher, secretKey, iv, encrypted, output));
         // Behavior Verifications
 
         // Assertions
     }
 
     @Test
-    void decrypt() throws NoSuchAlgorithmException, IOException {
+    void decrypt() throws NoSuchAlgorithmException, IOException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Expected Value
         EncryptorService encryptorService = new EncryptorServiceImpl();
         DecryptorService decryptorService = new DecryptorServiceImpl();
@@ -94,6 +95,8 @@ class DecryptorServiceImplTest {
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
         boolean isRecursive = true;
 
         // Set up method
@@ -102,8 +105,8 @@ class DecryptorServiceImplTest {
         // Stubbing methods
 
         // Calling the method
-        encryptorService.encrypt(secretKey, iv, directory, isRecursive);
-        decryptorService.decrypt(secretKey, iv, directory, isRecursive);
+        encryptorService.encrypt(cipher, secretKey, iv, directory, isRecursive);
+        decryptorService.decrypt(cipher, secretKey, iv, directory, isRecursive);
 
         // Behavior Verifications
 

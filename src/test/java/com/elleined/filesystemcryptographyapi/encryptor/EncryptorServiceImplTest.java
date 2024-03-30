@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.io.IOException;
@@ -34,13 +31,15 @@ class EncryptorServiceImplTest {
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
 
         // Set up method
 
         // Stubbing methods
 
         // Calling the method
-        String cipheredText = encryptorService.encrypt(secretKey, iv, "Hello World");
+        String cipheredText = encryptorService.encrypt(cipher, secretKey, iv, "Hello World");
 
         // Behavior Verifications
 
@@ -49,7 +48,7 @@ class EncryptorServiceImplTest {
     }
 
     @Test
-    void fileEncrypt() throws NoSuchAlgorithmException, IOException {
+    void fileEncrypt() throws NoSuchAlgorithmException, IOException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Expected Value
         EncryptorService encryptorService = new EncryptorServiceImpl();
 
@@ -57,6 +56,8 @@ class EncryptorServiceImplTest {
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
 
         // Set up method
 
@@ -67,7 +68,7 @@ class EncryptorServiceImplTest {
         File output = new File("./src/test/resources/encryptor/encrypted.txt");
 
         // Calling the method
-        assertDoesNotThrow(() -> encryptorService.encrypt(secretKey, iv, normalFile, output));
+        assertDoesNotThrow(() -> encryptorService.encrypt(cipher, secretKey, iv, normalFile, output));
 
         // Behavior Verifications
 
@@ -75,7 +76,7 @@ class EncryptorServiceImplTest {
     }
 
     @Test
-    void encrypt() throws NoSuchAlgorithmException, IOException {
+    void encrypt() throws NoSuchAlgorithmException, IOException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Expected Value
         EncryptorService encryptorService = new EncryptorServiceImpl();
 
@@ -83,6 +84,8 @@ class EncryptorServiceImplTest {
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv();
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         boolean isRecursive = true;
 
         // Set up method
@@ -91,7 +94,7 @@ class EncryptorServiceImplTest {
         // Stubbing methods
 
         // Calling the method
-        encryptorService.encrypt(secretKey, iv, directory, isRecursive);
+        encryptorService.encrypt(cipher, secretKey, iv, directory, isRecursive);
 
         // Behavior Verifications
 

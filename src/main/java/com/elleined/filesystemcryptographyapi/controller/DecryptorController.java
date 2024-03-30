@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.io.IOException;
@@ -31,9 +28,11 @@ public class DecryptorController {
                           @RequestParam("encodedIv") String encodedIv,
                           @RequestParam("encryptedData") String encryptedData) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv(encodedIv);
-        return decryptorService.decrypt(secretKey, iv, encryptedData);
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
+        return decryptorService.decrypt(cipher, secretKey, iv, encryptedData);
     }
 
     @PostMapping("/file")
@@ -42,10 +41,12 @@ public class DecryptorController {
                         @RequestParam("encryptedFileDestination") String encryptedFileDestination,
                         @RequestParam("outputDestination") String outputDestination) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
         IvParameterSpec iv = IVUtil.recoverIv(encodedIv);
         File encrypted = new File(encryptedFileDestination);
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
         File output = new File(outputDestination);
-        decryptorService.decrypt(secretKey, iv, encrypted, output);
+        decryptorService.decrypt(cipher, secretKey, iv, encrypted, output);
     }
 }

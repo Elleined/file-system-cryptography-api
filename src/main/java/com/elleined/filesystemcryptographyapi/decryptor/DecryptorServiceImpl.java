@@ -9,9 +9,6 @@ import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
 
@@ -20,47 +17,38 @@ import java.util.List;
 public class DecryptorServiceImpl implements DecryptorService {
 
     @Override
-    public String decrypt(SecretKey secretKey, IvParameterSpec iv, String encryptedData) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
+    public String decrypt(Cipher cipher, SecretKey secretKey, IvParameterSpec iv, String encryptedData) throws IllegalBlockSizeException, BadPaddingException {
         String originalValue = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedData)));
         log.debug("Successfully decoded ciphered text: {} to original value which is: {}", encryptedData, originalValue);
         return originalValue;
     }
 
     @Override
-    public void decrypt(SecretKey secretKey, IvParameterSpec iv, File encryptedFile, File output) {
-        try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(encryptedFile));
+    public void decrypt(Cipher cipher, SecretKey secretKey, IvParameterSpec iv, File encryptedFile, File output) {
+        encryptedFile.setWritable(true);
+        encryptedFile.setReadable(true);
+        output.setWritable(true);
+        output.setReadable(true);
+
+        try (CipherInputStream cipherInputStream = new CipherInputStream(new FileInputStream(encryptedFile), cipher);
              BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(output))) {
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
-
-            byte[] buffer = new byte[64];
-            int readBytes;
-            while ((readBytes = inputStream.read(buffer)) != -1) {
-                byte[] outputByteArray = cipher.update(buffer, 0, readBytes);
-                if (outputByteArray != null) outputStream.write(outputByteArray);
-            }
-
-            byte[] outputBytes = cipher.doFinal();
-            if (outputBytes != null) outputStream.write(outputBytes);
+            final byte[] bytes = new byte[1024];
+            for(int length = cipherInputStream.read(bytes); length != -1; length = cipherInputStream.read(bytes)) outputStream.write(bytes, 0, length);
             log.debug("Successfully decrypted the encrypted file named {} into output file named {}", encryptedFile.getName(), output.getName());
-        } catch (RuntimeException | IOException | NoSuchAlgorithmException | NoSuchPaddingException |
-                 InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException |
-                 BadPaddingException e) {
-            log.error("Error occured in encrypting normalFIle and output file {}", e.getMessage());
+        } catch (RuntimeException | IOException e) {
+            log.error("Error occurred in encrypting normalFIle and output file {}", e.getMessage());
         }
     }
 
     @Override
-    public void decrypt(SecretKey secretKey, IvParameterSpec iv, Path directory, boolean isRecursive) throws IOException {
+    public void decrypt(Cipher cipher, SecretKey secretKey, IvParameterSpec iv, Path directory, boolean isRecursive) throws IOException {
         if (isRecursive) {
             Files.list(directory)
                     .filter(Files::isDirectory)
                     .forEach(path -> {
                         try {
-                            this.decrypt(secretKey, iv, path, true);
+                            this.decrypt(cipher, secretKey, iv, path, true);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -72,6 +60,6 @@ public class DecryptorServiceImpl implements DecryptorService {
                 .map(Path::toFile)
                 .toList();
 
-        files.forEach(file -> this.decrypt(secretKey, iv, file, file));
+        files.forEach(file -> this.decrypt(cipher, secretKey, iv, file, file));
     }
 }
