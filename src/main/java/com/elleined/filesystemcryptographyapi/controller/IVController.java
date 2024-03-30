@@ -21,7 +21,7 @@ public class IVController {
         return encodedIv;
     }
 
-    @GetMapping("/generate")
+    @GetMapping("/generate/custom")
     public String generateIv(@RequestParam("n") int n) {
         String encodedIv = IVUtil.generateIvBytes(n);
         System.out.println("Make sure to save this encoded iv bytes this will be your key for encrypting and decrypting file system!!!: " + encodedIv);

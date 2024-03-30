@@ -18,7 +18,7 @@ public class KeyController {
         return secretKey;
     }
 
-    @GetMapping("/generate")
+    @GetMapping("/generate/custom")
     public String generateKey(@RequestParam("n") int n,
                               @RequestParam("algorithm") String algorithm) throws NoSuchAlgorithmException {
         String secretKey = KeyUtil.generateKey(n, algorithm);
