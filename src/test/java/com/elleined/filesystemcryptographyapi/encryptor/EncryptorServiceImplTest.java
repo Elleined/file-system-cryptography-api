@@ -1,11 +1,11 @@
 package com.elleined.filesystemcryptographyapi.encryptor;
 
+import com.elleined.filesystemcryptographyapi.util.FileUtil;
 import com.elleined.filesystemcryptographyapi.util.IVUtil;
 import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -68,8 +68,8 @@ class EncryptorServiceImplTest {
         // Stubbing methods
 
         // Calling the method
-        File normalFile = new File("./src/test/resources/encryptor/normal.txt");
-        File output = new File("./src/test/resources/encryptor/encrypted.txt");
+        File normalFile = new File("./src/test/resources/encryptor/normal-file.txt");
+        File output = FileUtil.createFileFrom(normalFile);
 
         // Calling the method
         assertDoesNotThrow(() -> encryptorService.encrypt(cipher, secretKey, iv, normalFile, output));

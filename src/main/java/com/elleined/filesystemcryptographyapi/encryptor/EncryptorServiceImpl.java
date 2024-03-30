@@ -1,5 +1,6 @@
 package com.elleined.filesystemcryptographyapi.encryptor;
 
+import com.elleined.filesystemcryptographyapi.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +61,9 @@ public class EncryptorServiceImpl implements EncryptorService {
                 .map(Path::toFile)
                 .toList();
 
-        files.forEach(file -> this.encrypt(cipher, secretKey, iv, file, file));
+        files.forEach(file -> {
+            File output = FileUtil.createFileFrom(file);
+            this.encrypt(cipher, secretKey, iv, file, output);
+        });
     }
 }

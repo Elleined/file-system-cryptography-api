@@ -1,6 +1,7 @@
 package com.elleined.filesystemcryptographyapi.decryptor;
 
 
+import com.elleined.filesystemcryptographyapi.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +61,9 @@ public class DecryptorServiceImpl implements DecryptorService {
                 .map(Path::toFile)
                 .toList();
 
-        files.forEach(file -> this.decrypt(cipher, secretKey, iv, file, file));
+        files.forEach(file -> {
+            File output = FileUtil.createFileFrom(file);
+            this.decrypt(cipher, secretKey, iv, file, output);
+        });
     }
 }

@@ -2,14 +2,12 @@ package com.elleined.filesystemcryptographyapi.decryptor;
 
 import com.elleined.filesystemcryptographyapi.encryptor.EncryptorService;
 import com.elleined.filesystemcryptographyapi.encryptor.EncryptorServiceImpl;
+import com.elleined.filesystemcryptographyapi.util.FileUtil;
 import com.elleined.filesystemcryptographyapi.util.IVUtil;
 import com.elleined.filesystemcryptographyapi.util.KeyUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.test.context.TestPropertySource;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -63,7 +61,7 @@ class DecryptorServiceImplTest {
     }
 
     @Test
-    void fileDecrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
+    void fileDecrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, IOException {
         // Expected Value
         EncryptorService encryptorService = new EncryptorServiceImpl();
         DecryptorService decryptorService = new DecryptorServiceImpl();
@@ -81,7 +79,7 @@ class DecryptorServiceImplTest {
 
         // Calling the method
         File normalFile = new File("./src/test/resources/decryptor/normal-file.txt");
-        File encrypted = new File("./src/test/resources/decryptor/encrypted-file.txt");
+        File encrypted = FileUtil.createFileFrom(normalFile);
         File output = new File("./src/test/resources/decryptor/output.txt");
 
         // Calling the method
