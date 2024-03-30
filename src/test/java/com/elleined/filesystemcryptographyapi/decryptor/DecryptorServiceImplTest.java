@@ -30,19 +30,22 @@ class DecryptorServiceImplTest {
         DecryptorService decryptorService = new DecryptorServiceImpl();
 
         // Mock data
-        String data = "Hello World!";
+        String data = "Hello World! Hello World! Hello World!";
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
-        IvParameterSpec iv = IVUtil.recoverIv();
+        String encodeIv = IVUtil.generateIvBytes();
+        IvParameterSpec iv = IVUtil.recoverIv(encodeIv);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
 
         // Set up method
 
         // Stubbing methods
 
         // Calling the method
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         String encryptedText = encryptorService.encrypt(cipher, secretKey, iv, data);
+
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
         String originalValue = decryptorService.decrypt(cipher, secretKey, iv, encryptedText);
 
         // Behavior Verifications
@@ -66,7 +69,6 @@ class DecryptorServiceImplTest {
         String encodeIv = IVUtil.generateIvBytes();
         IvParameterSpec iv = IVUtil.recoverIv(encodeIv);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
 
         // Set up method
 
@@ -78,7 +80,10 @@ class DecryptorServiceImplTest {
         File output = new File("./src/test/resources/decryptor/output.txt");
 
         // Calling the method
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         assertDoesNotThrow(() -> encryptorService.encrypt(cipher, secretKey, iv, normalFile, encrypted));
+
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
         assertDoesNotThrow(() -> decryptorService.decrypt(cipher, secretKey, iv, encrypted, output));
         // Behavior Verifications
 

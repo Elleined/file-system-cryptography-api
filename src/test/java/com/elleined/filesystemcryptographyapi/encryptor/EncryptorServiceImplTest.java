@@ -30,7 +30,8 @@ class EncryptorServiceImplTest {
         // Mock data
         String encodedKey = KeyUtil.generateKey();
         SecretKey secretKey = KeyUtil.recoverKey(encodedKey);
-        IvParameterSpec iv = IVUtil.recoverIv();
+        String encodeIv = IVUtil.generateIvBytes();
+        IvParameterSpec iv = IVUtil.recoverIv(encodeIv);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
 
